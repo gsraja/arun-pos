@@ -1,0 +1,32 @@
+div(x-data="{search: search(), btnId: 'radio-btn-' + tab.name}")
+  h4 Category
+  div: .btn-group(role="group")
+    div(x-id="[btnId]")
+      input.btn-check(:id="$id(btnId)" type="radio" @click="search.setCategory('', 0)" :name="btnId" autocomplete="off" checked)
+      label.btn.btn-outline-warning(:for="$id(btnId)") All
+    for cat in search.getCategories(0)
+      div(x-id="[btnId]")
+        input.btn-check(type="radio" @click="search.setCategory(cat, 0)" :name="btnId" :id="$id(btnId)" autocomplete="off")
+        label.btn.btn-outline-primary(:for="$id(btnId)")= cat
+  for n in search.getDepth()
+    div: .btn-group(role="group")
+      for cat in search.getCategories(n)
+        div(x-id="[btnId]")
+          input.btn-check(type="radio" @click="search.setCategory(cat, n)" :name="btnId" :id="$id(btnId)" autocomplete="off")
+          label.btn.btn-outline-primary(:for="$id(btnId)")= cat
+  h4 Products
+  .row
+    for product in search.getFilteredProducts()
+      .col-sm-4
+        .card: .card-body
+          h5.card-title= product.name
+          h6.card-subtitle.mb-2.text-muted= product.unit
+          p.card-text
+            | #[b Price] : #[span ₹#{product.price.toString()}]
+          if cart.getItemCount(product) == 0
+            a.btn.btn-primary(href="#" @click="cart.add(product)") Add to Cart
+          if cart.getItemCount(product) > 0
+            .input-group
+              button.btn.btn-primary(type="button" @click="cart.remove(product)") -
+              input(type="number" style="width: 3em" x-model="cart.getItem(product).quantity")
+              button.btn.btn-primary(type="button" @click="cart.add(product)") +

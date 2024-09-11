@@ -1,0 +1,9 @@
+h5 Bill
+.input-group.mb-3
+  span.input-group-text Bill No
+  input.form-control(type="number" x-model="cart.id")
+.input-group.mb-3
+  span.input-group-text Discount
+  input.form-control(type="number" x-model="cart.discount")
+button.btn.btn-danger(type="button" @click="removeActiveTab()") Discard Bill
+button.btn.btn-primary(:disabled="cart.items.length == 0" type="button" @click="printCart(cart)") Print Bill

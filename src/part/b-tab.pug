@@ -1,0 +1,8 @@
+mixin b-tab
+  div(x-data='tabnav')
+    +nav.nav-pills&attributes(attributes)
+      template(x-for="(tab, idx) in tabs" :key="tab.id")
+        +nav-item()(:class="{'active': idx == activeTab}" @click="activeTab = idx")= tab.name
+      +nav-item()(@click="newTab") +
+    template(x-for="(tab, tabidx) in tabs" :key="tab.id")
+      div(x-show="tabidx == activeTab"): block

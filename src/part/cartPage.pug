@@ -1,0 +1,21 @@
+h4 Cart
+table.table.table-sm
+  thead: tr
+    th S.No
+    th Name
+    th Price
+    th Qty
+    th Total
+  tbody
+  for citem, citemIdx in cart.items
+    tr
+      td= citemIdx + 1
+      td= citem.product.name 
+      td(style="text-align: right")= citem.price.toString()
+      td(style="text-align: right")
+        input(type="number" style="width:4em" x-model="citem.quantity")
+      td(style="text-align: right")= citem.total.toString()
+  tfoot: tr
+    th(colspan="4" style="text-align: center") Total 
+    th(style="text-align: right")= cart.total
+  

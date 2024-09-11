@@ -1,0 +1,18 @@
+- var a = [1,2,3]
+- var b = true
+
+
+mixin greet(name)
+  h3 hello #{name}
+
+html 
+  head 
+    title title content 
+  body 
+    if b
+      h1(att="attrvalue") content
+    for k in a
+      p
+        | hello #{k} world
+        | greet #{k}
+      +greet("Sathish")

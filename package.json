@@ -1,0 +1,20 @@
+{
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "@types/alpinejs": "^3.13.10",
+    "gulp": "^5.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-format-html": "^3.0.0",
+    "gulp-inline-source": "^4.0.0",
+    "gulp-pug": "^5.0.0",
+    "gulp-serve": "^1.4.0"
+  },
+  "dependencies": {
+    "@types/web-bluetooth": "^0.0.20",
+    "alpinejs": "^3.14.1",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "typescript": "^5.5.4"
+  }
+}
