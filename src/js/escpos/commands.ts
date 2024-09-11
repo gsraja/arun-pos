@@ -64,12 +64,14 @@ class Printer {
   }
 
   newLine(n : number = 1) {
-    this.printAndFeed(n);
+    this.out += '\n'.repeat(n)
+    let lines = new Array(n).fill(0x0a);
+    this.push(...lines);
   }
 
   println(str: string) {
     this.print(str);
-    this.printAndFeed(1);
+    this.newLine();
   }
 
   set align(n : 0 | 1 | 2) {
@@ -95,11 +97,6 @@ class Printer {
     if (dw) n |= 32;
     if (underline) n |= 128;
     this.font = n;
-  }
-
-  printAndFeed(n : number) {
-    this.out += '\n'.repeat(n);
-    this.push(ESC, 0x4A, n);
   }
 
   cut() {
