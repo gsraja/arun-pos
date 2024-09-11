@@ -77,9 +77,9 @@ document.addEventListener('alpine:init', () => {
         p.setFont(0, true)
         p.printRow('TOTAL', `${cart.total.multiply(1 - (cart.discount/100)).roundPaise().toString()}`)
         p.println('-'.repeat(45))
-        p.printAndFeed(5);
+        p.newLine(5);
         p.cut();
-        p.printAndFeed(5);
+        p.newLine(5);
         this.print(p.toBuffers())
       }
 

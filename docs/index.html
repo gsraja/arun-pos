@@ -169,7 +169,7 @@ document.addEventListener('alpine:init', function () {
         },
         printCart: function (cart) {
             return __awaiter(this, void 0, void 0, function () {
-                var p, today, yy, mm, dd, formattedToday, hh, min, formattedTime, _i, _a, item;
+                var p, _i, _a, item;
                 return __generator(this, function (_b) {
                     p = new Printer();
                     p.newLine(5);
@@ -179,19 +179,25 @@ document.addEventListener('alpine:init', function () {
                     p.setFont(1, true, false, false, false);
                     p.println("ESTIMATE BILL");
                     p.font = 0;
+                    p.newLine(3);
+                    /*
                     // split 31 - 14
                     p.tabs = [0, 31];
-                    today = new Date();
-                    yy = today.getFullYear() - 2000;
-                    mm = today.getMonth() + 1;
-                    dd = today.getDate();
-                    formattedToday = dd.toString().padStart(2, '0') + '/' + mm.toString().padStart(2, '0') + '/' + yy;
-                    hh = today.getHours();
-                    min = today.getMinutes();
-                    formattedTime = hh.toString().padStart(2, '0') + ':' + min.toString().padStart(2, '0');
+                    /// DATE
+                    const today = new Date();
+                    const yy = today.getFullYear() - 2000;
+                    const mm = today.getMonth() + 1; // Months start at 0!
+                    const dd = today.getDate();
+                    const formattedToday = dd.toString().padStart(2, '0') + '/' + mm.toString().padStart(2, '0') + '/' + yy;
+            
+                    const hh = today.getHours();
+                    const min = today.getMinutes();
+                    const formattedTime = hh.toString().padStart(2, '0') + ':' + min.toString().padStart(2, '0');
                     ///
-                    p.printRow(' ', "DATE: ".concat(formattedToday));
-                    p.printRow("BILL NO: ".concat(cart.id), "TIME: ".concat(formattedTime));
+            
+                    p.printRow(' ', `DATE: ${formattedToday}`)
+                    p.printRow(`BILL NO: ${cart.id}`, `TIME: ${formattedTime}`)
+                    */
                     // split id 3-18-4-7-8
                     p.println('-'.repeat(45));
                     p.tabs = [0, 22, 30, 37];
@@ -210,9 +216,9 @@ document.addEventListener('alpine:init', function () {
                     p.setFont(0, true);
                     p.printRow('TOTAL', "".concat(cart.total.multiply(1 - (cart.discount / 100)).roundPaise().toString()));
                     p.println('-'.repeat(45));
-                    p.printAndFeed(5);
+                    p.newLine(5);
                     p.cut();
-                    p.printAndFeed(5);
+                    p.newLine(5);
                     this.print(p.toBuffers());
                     return [2 /*return*/];
                 });
@@ -399,7 +405,7 @@ var EOL = 0x0a;
 var CR = 0x0d;
 var Printer = /** @class */ (function () {
     function Printer() {
-        this.results = [[ESC, 0x64]];
+        this.results = [[ESC, 0x40]];
         this._tabs = [];
         this._font = 0;
     }
@@ -459,13 +465,7 @@ var Printer = /** @class */ (function () {
     };
     Printer.prototype.newLine = function (n) {
         if (n === void 0) { n = 1; }
-        this.out += '\n'.repeat(n);
-        if (n == 1) {
-            this.push(0x0a);
-        }
-        else if (n > 1) {
-            this.push(ESC, 0x64, n);
-        }
+        this.printAndFeed(n);
     };
     Printer.prototype.println = function (str) {
         this.print(str);
@@ -508,6 +508,7 @@ var Printer = /** @class */ (function () {
         this.font = n;
     };
     Printer.prototype.printAndFeed = function (n) {
+        this.out += '\n'.repeat(n);
         this.push(ESC, 0x4A, n);
     };
     Printer.prototype.cut = function () {

@@ -21,7 +21,7 @@ task('inline', function () {
 
     return src('./dist/*.html')
         .pipe(inlinesource(options))
-        .pipe(dest('./final'));
+        .pipe(dest('./docs'));
 });
 
 task('copy-static', function() {

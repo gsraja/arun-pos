@@ -5,7 +5,7 @@ var content = '';
 module.exports = {
 	preCodeGen: function(ast, options) {
 		var content = JSON.stringify(ast)
-        fs.writeFileSync('dist/test.txt', content)
+        //fs.writeFileSync('dist/test.txt', content)
         processNode(ast)
 		return ast
 	}

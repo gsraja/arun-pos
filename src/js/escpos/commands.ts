@@ -13,7 +13,7 @@
 
 class Printer {
   out : string
-  results : Array<Array<number>> = [[ESC, 0x64]]
+  results : Array<Array<number>> = [[ESC, 0x40]]
 
   push(...vals : number[]) {
     let last = this.results.at(-1);
@@ -64,12 +64,7 @@ class Printer {
   }
 
   newLine(n : number = 1) {
-    this.out += '\n'.repeat(n);
-    if (n == 1) {
-      this.push(0x0a);
-    } else if (n > 1) {
-      this.push(ESC, 0x64, n);
-    }
+    this.printAndFeed(n);
   }
 
   println(str: string) {
@@ -103,6 +98,7 @@ class Printer {
   }
 
   printAndFeed(n : number) {
+    this.out += '\n'.repeat(n);
     this.push(ESC, 0x4A, n);
   }
 
