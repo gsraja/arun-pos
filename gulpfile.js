@@ -34,7 +34,8 @@ task('ts', function () {
         .pipe(ts({
           noImplicitAny: true,
           moduleResolution: 'node',
-          module: 'none'
+          module: 'none',
+          removeComments: true,
         }))
         .pipe(concat('output.js'))
         .pipe(dest('./dist'));
