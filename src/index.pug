@@ -1,4 +1,3 @@
-include mixin/b5
 include part/b-tab
 
 doctype html
@@ -13,12 +12,12 @@ body
   div(x-data="printer")
     +b-tab
       div(x-data="{ptab:2, cart: cart()}")
-        +nav.nav-tabs
-          +nav-item()(@click="ptab=0" :class="{active: ptab == 0}") Search
-          +nav-item()(@click="ptab=1" :class="{active: ptab == 1}")
+        ul.nav.nav-tabs
+          li.nav-item: a.nav-link(href="#" @click="ptab=0" :class="{active: ptab == 0}") Search
+          li.nav-item: a.nav-link(href="#" @click="ptab=1" :class="{active: ptab == 1}")
             | Cart 
             span.badge.bg-danger(x-show="cart.items.length > 0")= cart.items.length 
-          +nav-item()(@click="ptab=2" :class="{active: ptab == 2}")
+          li.nav-item: a.nav-link(href="#" @click="ptab=2" :class="{active: ptab == 2}")
             | Bill 
             span.badge.bg-danger(x-show="cart.items.length > 0")= cart.total.toString()
         div(x-show="ptab == 0"): include part/searchPage
