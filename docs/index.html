@@ -172,7 +172,7 @@ document.addEventListener('alpine:init', function () {
                 var p, _i, _a, item;
                 return __generator(this, function (_b) {
                     p = new Printer();
-                    p.newLine(5);
+                    p.newLine(2);
                     p.align = 1;
                     p.setFont(0, true, true, true, false);
                     p.println("ARUNN CRACKERS");
@@ -206,7 +206,7 @@ document.addEventListener('alpine:init', function () {
                     p.tabs = [0, 4, -22, -30, -37];
                     for (_i = 0, _a = cart.items; _i < _a.length; _i++) {
                         item = _a[_i];
-                        p.printRow(item.product.id.toString(), item.product.printName, item.quantity + 'Pk', item.price.toString(), item.total.toString());
+                        p.printRow(item.product.id.toString(), item.product.printName, item.quantity.toString(), item.price.toString(), item.total.toString());
                     }
                     p.println('-'.repeat(45));
                     p.tabs = [0, -30];
@@ -218,7 +218,6 @@ document.addEventListener('alpine:init', function () {
                     p.println('-'.repeat(45));
                     p.newLine(5);
                     p.cut();
-                    p.newLine(5);
                     this.print(p.toBuffers());
                     return [2 /*return*/];
                 });
@@ -405,7 +404,7 @@ var EOL = 0x0a;
 var CR = 0x0d;
 var Printer = /** @class */ (function () {
     function Printer() {
-        this.results = [[ESC, 0x40]];
+        this.results = [[ESC, 0x40, DLE, 0x05, 2]];
         this._tabs = [];
         this._font = 0;
     }
@@ -465,11 +464,13 @@ var Printer = /** @class */ (function () {
     };
     Printer.prototype.newLine = function (n) {
         if (n === void 0) { n = 1; }
-        this.printAndFeed(n);
+        this.out += '\n'.repeat(n);
+        var lines = new Array(n).fill(0x0a);
+        this.push.apply(this, lines);
     };
     Printer.prototype.println = function (str) {
         this.print(str);
-        this.printAndFeed(1);
+        this.newLine();
     };
     Object.defineProperty(Printer.prototype, "align", {
         set: function (n) {
@@ -506,10 +507,6 @@ var Printer = /** @class */ (function () {
         if (underline)
             n |= 128;
         this.font = n;
-    };
-    Printer.prototype.printAndFeed = function (n) {
-        this.out += '\n'.repeat(n);
-        this.push(ESC, 0x4A, n);
     };
     Printer.prototype.cut = function () {
         this.push(ESC, 0x69);

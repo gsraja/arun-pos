@@ -13,7 +13,7 @@
 
 class Printer {
   out : string
-  results : Array<Array<number>> = [[ESC, 0x40]]
+  results : Array<Array<number>> = [[ESC, 0x40, DLE, 0x05, 2]]
 
   push(...vals : number[]) {
     let last = this.results.at(-1);

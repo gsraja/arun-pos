@@ -32,7 +32,7 @@ document.addEventListener('alpine:init', () => {
 
       async printCart(this: BtDevice, cart : Cart) {
         let p = new Printer();
-        p.newLine(5); 
+        p.newLine(2); 
         p.align = 1;
         p.setFont(0, true, true, true, false);
         p.println("ARUNN CRACKERS");
@@ -67,7 +67,7 @@ document.addEventListener('alpine:init', () => {
         p.println('-'.repeat(45))
         p.tabs = [0, 4, -22, -30, -37]
         for (let item of cart.items) {
-           p.printRow(item.product.id.toString(), item.product.printName, item.quantity + 'Pk', item.price.toString(), item.total.toString())
+           p.printRow(item.product.id.toString(), item.product.printName, item.quantity.toString(), item.price.toString(), item.total.toString())
         }
         p.println('-'.repeat(45))
         p.tabs = [0, -30]
@@ -79,7 +79,6 @@ document.addEventListener('alpine:init', () => {
         p.println('-'.repeat(45))
         p.newLine(5);
         p.cut();
-        p.newLine(5);
         this.print(p.toBuffers())
       }
 
