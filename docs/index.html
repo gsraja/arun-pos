@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>var Amount = /** @class */ (function () {
+  <script>var Amount = (function () {
     function Amount(paise_value) {
         this.paise_value = paise_value;
     }
@@ -120,14 +120,14 @@ document.addEventListener('alpine:init', function () {
                     switch (_b.label) {
                         case 0:
                             if (this.server != null && this.server.connected) {
-                                return [2 /*return*/];
+                                return [2];
                             }
                             _a = this;
-                            return [4 /*yield*/, navigator.bluetooth.requestDevice({ filters: [{ namePrefix: 'Printer' }],
+                            return [4, navigator.bluetooth.requestDevice({ filters: [{ namePrefix: 'Printer' }],
                                     optionalServices: [service_uuid] }).then(function (dev) { return dev.gatt.connect(); })];
                         case 1:
                             _a.server = _b.sent();
-                            return [2 /*return*/];
+                            return [2];
                     }
                 });
             });
@@ -137,32 +137,32 @@ document.addEventListener('alpine:init', function () {
                 var service, characteristic, delay, _i, buffers_1, buf;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.connect()];
+                        case 0: return [4, this.connect()];
                         case 1:
                             _a.sent();
-                            return [4 /*yield*/, this.server.getPrimaryService(service_uuid)];
+                            return [4, this.server.getPrimaryService(service_uuid)];
                         case 2:
                             service = _a.sent();
-                            return [4 /*yield*/, service.getCharacteristic(characteristic_uuid)];
+                            return [4, service.getCharacteristic(characteristic_uuid)];
                         case 3:
                             characteristic = _a.sent();
                             delay = function (ms) { return new Promise(function (res) { return setTimeout(res, ms); }); };
                             _i = 0, buffers_1 = buffers;
                             _a.label = 4;
                         case 4:
-                            if (!(_i < buffers_1.length)) return [3 /*break*/, 8];
+                            if (!(_i < buffers_1.length)) return [3, 8];
                             buf = buffers_1[_i];
-                            return [4 /*yield*/, characteristic.writeValue(buf)];
+                            return [4, characteristic.writeValue(buf)];
                         case 5:
                             _a.sent();
-                            return [4 /*yield*/, delay(512)];
+                            return [4, delay(512)];
                         case 6:
                             _a.sent();
                             _a.label = 7;
                         case 7:
                             _i++;
-                            return [3 /*break*/, 4];
-                        case 8: return [2 /*return*/];
+                            return [3, 4];
+                        case 8: return [2];
                     }
                 });
             });
@@ -180,25 +180,6 @@ document.addEventListener('alpine:init', function () {
                     p.println("ESTIMATE BILL");
                     p.font = 0;
                     p.newLine(3);
-                    /*
-                    // split 31 - 14
-                    p.tabs = [0, 31];
-                    /// DATE
-                    const today = new Date();
-                    const yy = today.getFullYear() - 2000;
-                    const mm = today.getMonth() + 1; // Months start at 0!
-                    const dd = today.getDate();
-                    const formattedToday = dd.toString().padStart(2, '0') + '/' + mm.toString().padStart(2, '0') + '/' + yy;
-            
-                    const hh = today.getHours();
-                    const min = today.getMinutes();
-                    const formattedTime = hh.toString().padStart(2, '0') + ':' + min.toString().padStart(2, '0');
-                    ///
-            
-                    p.printRow(' ', `DATE: ${formattedToday}`)
-                    p.printRow(`BILL NO: ${cart.id}`, `TIME: ${formattedTime}`)
-                    */
-                    // split id 3-18-4-7-8
                     p.println('-'.repeat(45));
                     p.tabs = [0, 22, 30, 37];
                     p.printRow('ITEM NAME', 'QTY', 'PRICE', 'AMOUNT');
@@ -219,7 +200,7 @@ document.addEventListener('alpine:init', function () {
                     p.newLine(5);
                     p.cut();
                     this.print(p.toBuffers());
-                    return [2 /*return*/];
+                    return [2];
                 });
             });
         }
@@ -274,8 +255,25 @@ document.addEventListener('alpine:init', function () {
     }); });
 });
 
+document.addEventListener('alpine:init', function () {
+    Alpine.data('itemService', function () { return ({
+        products: products1,
+        saveItems: function () {
+            var blob = new Blob(["This is a sample file content."], { type: "text/plain;charset=utf-8" });
+            var a = document.createElement("a"), url = URL.createObjectURL(blob);
+            a.href = url;
+            a.download = 'hello.txt';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function () { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 100);
+        },
+        loadItem: function () {
+        }
+    }); });
+});
 
-var products = [
+
+var products1 = [
     {
         id: 1,
         name: "4\" Gold Lakshmi",
@@ -315,7 +313,7 @@ var products = [
 ];
 
 document.addEventListener('alpine:init', function () {
-    Alpine.store('products', products);
+    Alpine.store('products', products1);
     Alpine.data('search', function () { return ({
         searchCategory: '',
         setCategory: function (category, depth) {
@@ -331,7 +329,7 @@ document.addEventListener('alpine:init', function () {
                 k.length = depth;
                 baseCategory = k.join(':');
             }
-            return products
+            return Alpine.store('products')
                 .map(function (p) { return p.category; })
                 .filter(function (c) { return c.startsWith(baseCategory); })
                 .map(function (c) { return c.substring(baseCategory.length === 0 ? 0 : baseCategory.length + 1); })
@@ -346,54 +344,18 @@ document.addEventListener('alpine:init', function () {
         },
         getFilteredProducts: function () {
             var _this = this;
-            return products.filter(function (p) { return p.category.startsWith(_this.searchCategory); });
+            return Alpine.store('products').filter(function (p) { return p.category.startsWith(_this.searchCategory); });
         }
     }); });
 });
 function getCat(baseCat) {
-    var baseData = products.filter(function (p) { return p.tag; });
+    var baseData = Alpine.store('products').filter(function (p) { return p.tag; });
     return null;
 }
-/*
-    static Set<String> getCategory(Set<String> cat) {
-        var baseData = dataSet.stream()
-                .filter(d -> d.tags().containsAll(cat))
-                .collect(Collectors.toUnmodifiableSet());
-
-        var dataMap = new HashMap<String, Set<Data>>();
-        baseData.forEach(data -> {
-                    for (var c : data.tags()) {
-                        if (!cat.contains(c)) {
-                            dataMap.computeIfAbsent(c, k -> new HashSet<>()).add(data);
-                        }
-                    }
-        });
-
-        var sortedCount = dataMap.entrySet()
-                .stream()
-                .sorted(Comparator.<Map.Entry<String, Set<Data>>>comparingInt(e -> e.getValue().size()).reversed())
-                .toList();
-
-
-        var result = new HashSet<Data>();
-        var r = new HashSet<String>();
-        for (var entry : sortedCount) {
-            r.add(entry.getKey());
-            result.addAll(entry.getValue());
-            if (baseData.size() == result.size()) {
-                break;
-            }
-        }
-        return r;
-
-
-    }
-
-*/ 
 
 var LF = 0x0a;
 var FS = 0x1c;
-var FF = 0x0c; // Form FEED
+var FF = 0x0c;
 var GS = 0x1d;
 var DLE = 0x10;
 var EOT = 0x04;
@@ -402,7 +364,7 @@ var ESC = 0x1b;
 var TAB = 0x74;
 var EOL = 0x0a;
 var CR = 0x0d;
-var Printer = /** @class */ (function () {
+var Printer = (function () {
     function Printer() {
         this.results = [[ESC, 0x40, DLE, 0x05, 2]];
         this._tabs = [];
@@ -541,7 +503,20 @@ var Printer = /** @class */ (function () {
         <li class="nav-item">
           <a class="nav-link" href="#" @click="newTab">+</a>
         </li>
+        <li class="nav-item ms-auto">
+          <a class="nav-link" href="#" @click="activeTab = -1">
+            <svg class="bi bi-gear-fill" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+            </svg>
+          </a>
+        </li>
       </ul>
+      <div x-show="activeTab == -1" :class="{'active': activeTab == -1}">
+        <div x-data="itemService">
+          <h1>Settings page</h1>
+          <button class="btn btn-primary" type="button" @click="saveItems()">Save</button>
+        </div>
+      </div>
       <template x-for="(tab, tabidx) in tabs" :key="tab.id">
         <div x-show="tabidx == activeTab">
           <div x-data="{ptab:2, cart: cart()}">

@@ -4,7 +4,9 @@ interface Search {
 
 
 document.addEventListener('alpine:init', () => {
-    Alpine.store('products', products);
+    Alpine.store('products', products1);
+    
+
     Alpine.data('search', () => <Search> {
         searchCategory : '',
         setCategory(this: Search, category : string, depth: number) {
@@ -21,7 +23,7 @@ document.addEventListener('alpine:init', () => {
               k.length = depth;
               baseCategory = k.join(':')
             }
-            return products
+            return (<Product[]>Alpine.store('products'))
                     .map(p => p.category)
                     .filter(c => c.startsWith(baseCategory))
                     .map(c => c.substring(baseCategory.length === 0? 0 : baseCategory.length + 1))
@@ -37,14 +39,14 @@ document.addEventListener('alpine:init', () => {
         },
 
         getFilteredProducts(this: Search) : Product[] {
-            return products.filter(p => p.category.startsWith(this.searchCategory));
+            return (<Product[]>Alpine.store('products')).filter(p => p.category.startsWith(this.searchCategory));
         }
 
     });
 });
 
 function getCat(baseCat: Set<string>) : Set<string> {
-    var baseData = products.filter(p => p.tag)
+    var baseData = (<Product[]>Alpine.store('products')).filter(p => p.tag)
     return null
 }
 

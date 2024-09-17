@@ -1,6 +1,6 @@
 
 
-const products : Product[] = [
+const products1 : Product[] = [
       {
         id : 1,
         name: "4\" Gold Lakshmi",
