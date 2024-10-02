@@ -6,7 +6,7 @@ interface Search {
 
 
 document.addEventListener('alpine:init', () => {    
-
+    Alpine.store('products', products1);
     Alpine.data('search', () => <Search> {
         searchCategory : '',
         searchText: '',
