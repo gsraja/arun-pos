@@ -1,3 +1,4 @@
 div(x-data="itemService")
   h1 Settings page
-  button.btn.btn-primary(type="button" @click="saveItems()") Save
+  button.btn.btn-primary(type="button" @click="saveItems") Save
+  input.btn.btn-primary(type="file" x-on:change="loadItems($event)" value="Load")

@@ -1,14 +1,15 @@
+
 interface Search {
     searchCategory : string,
+    searchText: string,
 }
 
 
-document.addEventListener('alpine:init', () => {
-    Alpine.store('products', products1);
-    
+document.addEventListener('alpine:init', () => {    
 
     Alpine.data('search', () => <Search> {
         searchCategory : '',
+        searchText: '',
         setCategory(this: Search, category : string, depth: number) {
             var temp = this.searchCategory.split(":");
             temp.length = depth;
@@ -39,6 +40,12 @@ document.addEventListener('alpine:init', () => {
         },
 
         getFilteredProducts(this: Search) : Product[] {
+            const products = (<Product[]>Alpine.store('products'))
+            const fo : IFuseOptions<Product> = {
+                
+            }
+            const fuse = new Fuse<Product>(products, {});
+
             return (<Product[]>Alpine.store('products')).filter(p => p.category.startsWith(this.searchCategory));
         }
 
