@@ -4,6 +4,7 @@
         "moduleResolution": "node",
         "module": "none",
         "removeComments": true,
+        "allowSyntheticDefaultImports": true,
     },
     "include": [
       "./src/**/*.ts"

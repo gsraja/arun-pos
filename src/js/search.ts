@@ -1,4 +1,3 @@
-
 interface Search {
     searchCategory : string,
     searchText: string,
@@ -7,6 +6,17 @@ interface Search {
 
 document.addEventListener('alpine:init', () => {    
     Alpine.store('products', products1);
+    const options = { keys: ['name', 'tag'] }
+    // Create the Fuse index
+    const myIndex = window.Fuse.createIndex(options.keys, products1)
+    // initialize Fuse with the index
+    const fuse = new window.Fuse(products1, options, myIndex)
+    
+
+    function getProducts() : Product[] {
+        return (<Product[]>Alpine.store('products'));
+    }
+
     Alpine.data('search', () => <Search> {
         searchCategory : '',
         searchText: '',
@@ -24,7 +34,7 @@ document.addEventListener('alpine:init', () => {
               k.length = depth;
               baseCategory = k.join(':')
             }
-            return (<Product[]>Alpine.store('products'))
+            return  getProducts()
                     .map(p => p.category)
                     .filter(c => c.startsWith(baseCategory))
                     .map(c => c.substring(baseCategory.length === 0? 0 : baseCategory.length + 1))
@@ -40,25 +50,25 @@ document.addEventListener('alpine:init', () => {
         },
 
         getFilteredProducts(this: Search) : Product[] {
-            const products = (<Product[]>Alpine.store('products'))
-            const fo : IFuseOptions<Product> = {
-                
+            let products = getProducts();
+            if (this.searchText != '') {
+                products =  fuse.search(this.searchText).map(f => f.item)
             }
-            const fuse = new Fuse<Product>(products, {});
-
-            return (<Product[]>Alpine.store('products')).filter(p => p.category.startsWith(this.searchCategory));
+            return products.filter(p => p.category.startsWith(this.searchCategory));
         }
 
     });
 });
 
+
+/*
 function getCat(baseCat: Set<string>) : Set<string> {
     var baseData = (<Product[]>Alpine.store('products')).filter(p => p.tag)
     return null
 }
 
 
-/*
+
     static Set<String> getCategory(Set<String> cat) {
         var baseData = dataSet.stream()
                 .filter(d -> d.tags().containsAll(cat))

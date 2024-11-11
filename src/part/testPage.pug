@@ -1,21 +1,2 @@
 div(x-data="{search: search()}")
-  h4 Test
-  .form-floating.mb-3
-    input#floatingInput.form-control(type="email"  placeholder="Search")
-    label(for="floatingInput") Search
-  h4 Products
-  .row
-    for product in search.getFilteredProducts()
-      .col-sm-4
-        .card: .card-body
-          h5.card-title= product.name
-          h6.card-subtitle.mb-2.text-muted= product.unit
-          p.card-text
-            | #[b Price] : #[span ₹#{product.price.toString()}]
-          if cart.getItemCount(product) == 0
-            a.btn.btn-primary(href="#" @click="cart.add(product)") Add to Cart
-          if cart.getItemCount(product) > 0
-            .input-group
-              button.btn.btn-primary(type="button" @click="cart.remove(product)") -
-              input(type="number" style="width: 3em" x-model="cart.getItem(product).quantity")
-              button.btn.btn-primary(type="button" @click="cart.add(product)") +
+  

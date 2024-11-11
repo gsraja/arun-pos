@@ -1,4 +1,8 @@
 div(x-data="{search: search(), btnId: 'radio-btn-' + tab.name}")
+  h4 Search
+  .form-floating.mb-3
+    input#floatingInput.form-control(type="text" x-model="search.searchText"  placeholder="Search")
+    label(for="floatingInput") Search
   h4 Category
   div: .btn-group(role="group")
     div(x-id="[btnId]")
