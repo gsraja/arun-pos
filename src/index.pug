@@ -7,12 +7,12 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     script(src="output.js" inline)
     link(href="bootstrap.css" rel="stylesheet" inline)
-    script(src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js" inline)
+    script(src="fuse.basic.min.js" inline)
     title POS
 body
   div(x-data="printer")
     +b-tab
-      div(x-data="{ptab:2, cart: cart()}")
+      div(x-data="{ptab:0, cart: cart()}")
         ul.nav.nav-tabs
           li.nav-item: a.nav-link(href="#" @click="ptab=0" :class="{active: ptab == 0}") Search
           li.nav-item: a.nav-link(href="#" @click="ptab=1" :class="{active: ptab == 1}")
@@ -21,9 +21,7 @@ body
           li.nav-item: a.nav-link(href="#" @click="ptab=2" :class="{active: ptab == 2}")
             | Bill 
             span.badge.bg-danger(x-show="cart.items.length > 0")= cart.total.toString()
-          li.nav-item: a.nav-link(href="#" @click="ptab=3" :class="{active: ptab == 3}") Test
         div(x-show="ptab == 0"): include part/searchPage
         div(x-show="ptab == 1"): include part/cartPage
         div(x-show="ptab == 2"): include part/billPage
-        div(x-show="ptab == 3"): include part/testPage
   script(src="alphine.js" inline defer)

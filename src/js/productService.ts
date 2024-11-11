@@ -27,15 +27,13 @@ document.addEventListener('alpine:init', () => {
                 } else {
                     this._products = [];
                 }
-                
-                localStorage.setItem(localStorageProductKey, JSON.stringify(this._products))
             }
             return this._products;
         },
 
         setProducts(this: ProductService, products : Product[]) : void {
             this.setIsDirty();
-            localStorage.setItem(localStorageProductKey, JSON.stringify(this._products));
+            localStorage.setItem(localStorageProductKey, JSON.stringify(products));
         },
 
         setIsDirty(this: ProductService) {

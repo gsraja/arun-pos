@@ -1,12 +1,13 @@
-interface ItemService {
+const productPageKey = "productPage"
+interface ProductPage {
   products : Product[],
   saveItems(): void,
   loadItems(): void,
 }
 
-
 document.addEventListener('alpine:init', () => {
-  Alpine.data('itemService', () => (<ItemService>{
+  Alpine.data(productPageKey, () => (<ProductPage>{
+      products: getProductService().getProducts(),
       saveItems() {
         const json = localStorage.getItem(localStorageProductKey);
         const blob = new Blob([json], {type: "application/json;charset=utf-8",});
@@ -27,6 +28,7 @@ document.addEventListener('alpine:init', () => {
         reader.onload = function(e) {
           var contents = <string>e.target.result;
           localStorage.setItem(localStorageProductKey, contents);
+          getProductService().setIsDirty();
         };
         reader.readAsText(file);
       },

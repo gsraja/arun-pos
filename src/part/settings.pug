@@ -1,4 +1,24 @@
-div(x-data="itemService")
+div(x-data="{productPage: productPage()}")
   h1 Settings page
-  button.btn.btn-primary(type="button" @click="saveItems") Save
-  input.btn.btn-primary(type="file" x-on:change="loadItems($event)" value="Load")
+  button.btn.btn-primary(type="button" @click="productPage.saveItems") Save
+  input.btn.btn-primary(type="file" x-on:change="productPage.loadItems($event)" value="Load")
+
+  table.table.table-striped
+    thead
+      th Id
+      th Name
+      th printName 
+      th Unit 
+      th Price 
+      th Category 
+      th Tag 
+    tbody 
+      for product in productPage.products
+        tr 
+          td= product.id 
+          td= product.name 
+          td= product.printName 
+          td= product.unit 
+          td price 
+          td category 
+          td tags
