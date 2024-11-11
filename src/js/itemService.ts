@@ -7,9 +7,8 @@ interface ItemService {
 
 document.addEventListener('alpine:init', () => {
   Alpine.data('itemService', () => (<ItemService>{
-      products: products1,
       saveItems() {
-        const json = JSON.stringify(products1, null, 2);
+        const json = localStorage.getItem(localStorageProductKey);
         const blob = new Blob([json], {type: "application/json;charset=utf-8",});
         const a = document.createElement("a"),
         url = URL.createObjectURL(blob);
@@ -27,12 +26,7 @@ document.addEventListener('alpine:init', () => {
         var reader = new FileReader();
         reader.onload = function(e) {
           var contents = <string>e.target.result;
-          JSON.parse(contents, (key, value) => {
-            if (key == 'price') {
-              return new Amount(value.paise_value)
-            }
-            return value;
-          })
+          localStorage.setItem(localStorageProductKey, contents);
         };
         reader.readAsText(file);
       },

@@ -5,7 +5,7 @@ interface Search {
 
 
 document.addEventListener('alpine:init', () => {    
-    Alpine.store('products', products1);
+    //Alpine.store('products', products1);
     const options = { keys: ['name', 'tag'] }
     // Create the Fuse index
     const myIndex = window.Fuse.createIndex(options.keys, products1)
@@ -14,7 +14,7 @@ document.addEventListener('alpine:init', () => {
     
 
     function getProducts() : Product[] {
-        return (<Product[]>Alpine.store('products'));
+        return (<ProductService>Alpine.store(productServiceKey)).getProducts();
     }
 
     Alpine.data('search', () => <Search> {
