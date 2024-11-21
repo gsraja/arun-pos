@@ -1,10 +1,33 @@
-div(x-data="{productPage: productPage()}")
+div(x-data="productPage()")
   h1 Settings page
-  button.btn.btn-primary(type="button" @click="productPage.saveItems") Save
-  input.btn.btn-primary(type="file" x-on:change="productPage.loadItems($event)" value="Load")
+  button.btn.btn-primary(type="button" @click="saveItems") Save
+  input.btn.btn-primary(type="file" x-on:change="loadItems($event)" value="Load")
 
+  button.btn.btn-primary(type="button" @click="add") Add Item
+  .d-block.modal(tabindex="-1" x-show.important="showModal"): .modal-dialog: .modal-content
+    .modal-header 
+      h5.modal-title Add Product 
+      button.btn-close(type="button" @click="showModal = false"  aria-label="Close")
+    .modal-body 
+      form#myform(@submit.prevent='save')
+      .form-group
+        label(for='finputId') Product Id
+        input#finputId.form-control(type='text' x-model="editProduct.id" placeholder='Product Id')
+      .form-group
+        label(for='finputName') Name
+        input#finputName.form-control(type='text' x-model="editProduct.name" placeholder='Product Name')
+      .form-group
+        label(for='finputPrintName') Print Name
+        input#finputPrintName.form-control(type='text' x-model="editProduct.printName" placeholder='Product Name')
+      .form-group
+        label(for='finputUnit') Unit
+        input#finputUnit.form-control(type='text' x-model="editProduct.unit" placeholder='Product Unit')
+    .modal-footer 
+      button.btn.btn-secondary(type="button" @click="showModal = false") Close
+      button.btn.btn-primary(type="submit" form="myform") Save changes
   table.table.table-striped
     thead
+      th +/-
       th Id
       th Name
       th printName 
@@ -13,11 +36,13 @@ div(x-data="{productPage: productPage()}")
       th Category 
       th Tag 
     tbody 
-      for product in productPage.products
-        tr 
-          td= product.id 
-          td= product.name 
-          td= product.printName 
+      for product, idx in products
+        tr
+          td
+            button.btn.btn-danger(type="button" @click="edit(idx)") Edit
+          td= product.id
+          td= product.name
+          td= product.printName
           td= product.unit 
           td price 
           td category 

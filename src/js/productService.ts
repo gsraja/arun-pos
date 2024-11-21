@@ -5,6 +5,9 @@ interface ProductService {
     getProducts() : Product[],
     setProducts(products : Product[]) : void,
     setIsDirty() : void,
+    toJson(product: Product) : string,
+    fromJson(product: string) : Product,
+    clone(product: Product) : Product,
 }
 
 function getProductService() : ProductService {
@@ -17,7 +20,7 @@ document.addEventListener('alpine:init', () => {
         getProducts(this: ProductService) : Product[] {
             if (this._products == null) {
                 let productsJson = localStorage.getItem(localStorageProductKey);
-                if (productsJson) {
+                if (productsJson !== null) {
                     this._products =  JSON.parse(productsJson, (key, value) => {
                         if (key == 'price') {
                           return new Amount(value.paise_value)
@@ -39,5 +42,24 @@ document.addEventListener('alpine:init', () => {
         setIsDirty(this: ProductService) {
             this._products = null;
         },
+
+        toJson(product : Product) : string {
+            return JSON.stringify(product);
+        },
+
+        fromJson(productJson : string) : Product {
+            return JSON.parse(productJson, (key, value) => {
+                if (key == 'price') {
+                  return new Amount(value.paise_value)
+                }
+                return value;
+              });
+        },
+
+        clone(product : Product) : Product {
+            return this.fromJson(this.toJson(product));
+        },
+
+
     });
 });

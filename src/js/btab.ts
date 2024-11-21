@@ -11,7 +11,7 @@ interface TabObj {
 document.addEventListener('alpine:init', () => {
     Alpine.data('tabnav', () => (<Tab>{
         tabs:[{id: Date.now(), name: 1}],
-        activeTab: 0,
+        activeTab: -1,
         selectTab(this: Tab, idx : number){this.activeTab = idx},
         newTab(this: Tab) {
             const maxIdCount = this.tabs.map(k => k.name).reduce((a,b) => Math.max(a,b), 0);

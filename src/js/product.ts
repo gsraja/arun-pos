@@ -6,5 +6,5 @@ interface Product {
     unit : string
     price : Amount 
     category : string
-    tag: Set<string>
+    tag: Array<string>
 }
