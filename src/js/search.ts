@@ -14,7 +14,7 @@ document.addEventListener('alpine:init', () => {
     
 
     function getProducts() : Product[] {
-        return (<ProductService>Alpine.store(productServiceKey)).getProducts();
+        return getProductService().getProducts();
     }
 
     Alpine.data('search', () => <Search> {
@@ -59,48 +59,3 @@ document.addEventListener('alpine:init', () => {
 
     });
 });
-
-
-/*
-function getCat(baseCat: Set<string>) : Set<string> {
-    var baseData = (<Product[]>Alpine.store('products')).filter(p => p.tag)
-    return null
-}
-
-
-
-    static Set<String> getCategory(Set<String> cat) {
-        var baseData = dataSet.stream()
-                .filter(d -> d.tags().containsAll(cat))
-                .collect(Collectors.toUnmodifiableSet());
-
-        var dataMap = new HashMap<String, Set<Data>>();
-        baseData.forEach(data -> {
-                    for (var c : data.tags()) {
-                        if (!cat.contains(c)) {
-                            dataMap.computeIfAbsent(c, k -> new HashSet<>()).add(data);
-                        }
-                    }
-        });
-
-        var sortedCount = dataMap.entrySet()
-                .stream()
-                .sorted(Comparator.<Map.Entry<String, Set<Data>>>comparingInt(e -> e.getValue().size()).reversed())
-                .toList();
-
-
-        var result = new HashSet<Data>();
-        var r = new HashSet<String>();
-        for (var entry : sortedCount) {
-            r.add(entry.getKey());
-            result.addAll(entry.getValue());
-            if (baseData.size() == result.size()) {
-                break;
-            }
-        }
-        return r;
-
-
-    }
-
-*/

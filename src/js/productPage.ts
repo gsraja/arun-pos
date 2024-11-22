@@ -5,10 +5,15 @@ interface ProductPage {
   saveItems(): void,
   export(): void,
   
-  // Editing !!
-  showModal: boolean,
+
   editIdx : number,
   editProduct: Product,
+  editAmount: AmountText,
+
+
+  // Editing !!
+  showModal: boolean,
+
   edit(idx: number) : void,
   delete(idx: number): void,
   newProduct(): void,
@@ -16,6 +21,34 @@ interface ProductPage {
   cancel(): void,
   add() : void,
 }
+
+interface GetSet<T> {
+  get() : T,
+  set(val : T) : void,
+}
+
+
+class AmountText implements GetSet<string> {
+  _p : Product;
+  constructor(p : Product) {
+    this._p =  p;
+  }
+
+  get(): string {
+      return "" + this._p.price.Rupee;
+  }
+
+  set(val: string): void {
+    val = val.trim();
+    if (val === '') {
+      this._p.price = Amount.from(0);
+      return;
+    }
+ 
+    this._p.price = Amount.from(Number.parseInt(val));
+  }
+}
+
 
 document.addEventListener('alpine:init', () => {
   Alpine.data(productPageKey, () => (<ProductPage>{
@@ -33,7 +66,6 @@ document.addEventListener('alpine:init', () => {
           unit: '',
           price: Amount.from(0),
           category: '',
-          tag: [],
         };
 
         this.showModal = true;
@@ -53,6 +85,7 @@ document.addEventListener('alpine:init', () => {
       edit(this: ProductPage, idx : number) {
         this.editIdx = idx;
         this.editProduct = getProductService().clone(this.products[idx]);
+        this.editAmount = new AmountText(this.editProduct);
         this.showModal = true;
       },
 
@@ -65,7 +98,6 @@ document.addEventListener('alpine:init', () => {
           unit : '',
           price : new Amount(0),
           category : '',
-          tag: [],
         }
         this.showModal = true;
       },

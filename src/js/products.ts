@@ -8,7 +8,6 @@ const products1 : Product[] = [
         unit: "1 Pkt 5 Pcs.",
         price: Amount.from(160),
         category: "CRACKERS:ONE SOUND",
-        tag: ["CRACKERS", "ONE SOUND"],
       },
       {
         id : 2,
@@ -17,7 +16,6 @@ const products1 : Product[] = [
         unit: "1 Pkt 10 Pcs.",
         price: Amount.from(120),
         category: "CRACKERS:BOMB",
-        tag: ["CRACKERS", "BOMB"],
       },
       {
         id: 3,
@@ -26,7 +24,6 @@ const products1 : Product[] = [
         unit: "1 Pkt 50 Pcs.",
         price: Amount.from(65),
         category: "CRACKERS:BIJILI",
-        tag: ["CRACKERS", "BIJILI"],
       }, 
       {
         id: 4,
@@ -35,6 +32,5 @@ const products1 : Product[] = [
         unit: "1 Box 10 Pcs",
         price: Amount.from(210),
         category: "FLOWER POTS",
-        tag: ["FLOWER POT"],
       }
 ]

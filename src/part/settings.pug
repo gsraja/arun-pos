@@ -1,7 +1,7 @@
 div(x-data="productPage()")
   h1 Settings page
-  button.btn.btn-primary(type="button" @click="saveItems") Save
-  input.btn.btn-primary(type="file" x-on:change="loadItems($event)" value="Load")
+  button.btn.btn-primary(type="button" @click="saveItems") Export
+  input.btn.btn-primary(type="file" x-on:change="loadItems($event)" value="Import")
 
   button.btn.btn-primary(type="button" @click="add") Add Item
   .d-block.modal(tabindex="-1" x-show.important="showModal"): .modal-dialog: .modal-content
@@ -22,6 +22,11 @@ div(x-data="productPage()")
       .form-group
         label(for='finputUnit') Unit
         input#finputUnit.form-control(type='text' x-model="editProduct.unit" placeholder='Product Unit')
+      .form-group
+        label(for='finputPrice') Price
+        input#finputPrice.form-control(type='text' x-model="editAmount" placeholder='0')
+      .form-group
+        label(for='finputCategory') Category
     .modal-footer 
       button.btn.btn-secondary(type="button" @click="showModal = false") Close
       button.btn.btn-primary(type="submit" form="myform") Save changes
@@ -34,7 +39,6 @@ div(x-data="productPage()")
       th Unit 
       th Price 
       th Category 
-      th Tag 
     tbody 
       for product, idx in products
         tr
@@ -44,6 +48,5 @@ div(x-data="productPage()")
           td= product.name
           td= product.printName
           td= product.unit 
-          td price 
-          td category 
-          td tags
+          td= product.price.toString() 
+          td= product.category 
