@@ -87,7 +87,7 @@ var products1 = [
 document.addEventListener('alpine:init', function () {
     Alpine.data('tabnav', function () { return ({
         tabs: [{ id: Date.now(), name: 1 }],
-        activeTab: -1,
+        activeTab: 0,
         selectTab: function (idx) { this.activeTab = idx; },
         newTab: function () {
             var maxIdCount = this.tabs.map(function (k) { return k.name; }).reduce(function (a, b) { return Math.max(a, b); }, 0);
