@@ -35,12 +35,18 @@ div(x-data="productPage()")
             div(x-id="[btnId]")
               input.btn-check(type="radio" @click="setCategory(cat, 0)" :name="btnId" :id="$id(btnId)" autocomplete="off")
               label.btn.btn-outline-primary(:for="$id(btnId)")= cat
+          div(x-id="[btnId]" x-show="getDepth() === 0")
+            input.btn-check(type="radio" @click="newCategory" :name="btnId" :id="$id(btnId)" autocomplete="off")
+            label.btn.btn-outline-info(:for="$id(btnId)") +
         for n in getDepth()
           div: .btn-group(role="group")
             for cat in getCategories(n)
               div(x-id="[btnId]")
                 input.btn-check(type="radio" @click="setCategory(cat, n)" :name="btnId" :id="$id(btnId)" autocomplete="off")
                 label.btn.btn-outline-primary(:for="$id(btnId)")= cat
+            div(x-id="[btnId]" x-show="getDepth() === n")
+              input.btn-check(type="radio" @click="newCategory" :name="btnId" :id="$id(btnId)" autocomplete="off")
+              label.btn.btn-outline-info(:for="$id(btnId)") +
     .modal-footer 
       button.btn.btn-secondary(type="button" @click="showModal = false") Close
       button.btn.btn-primary(type="submit" form="myform") Save changes

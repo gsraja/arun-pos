@@ -17,6 +17,7 @@ interface ProductPage {
   setCategory(this: ProductPage, category : string, depth: number) : void,
   getCategories(this: ProductPage, depth : number) : string[],
   getDepth(this: ProductPage) :  number,
+  newCategory(this: ProductPage) : void,
 
 
   // Editing !!
@@ -24,7 +25,6 @@ interface ProductPage {
 
   edit(idx: number) : void,
   delete(idx: number): void,
-  newProduct(): void,
   save():  void,
   cancel(): void,
   add() : void,
@@ -67,20 +67,6 @@ document.addEventListener('alpine:init', () => {
       editAmount : null,
       editCategory : [],
 
-      newProduct(this: ProductPage) {
-        this.editIdx = -1;
-        this.editProduct = {
-          id: -1,
-          name: '',
-          printName: '',
-          unit: '',
-          price: Amount.from(0),
-          category: '',
-        };
-
-        this.showModal = true;
-      },
-
       save(this: ProductPage) {
         let isNew = this.editIdx == -1;
         if (isNew) {
@@ -102,7 +88,7 @@ document.addEventListener('alpine:init', () => {
       add(this: ProductPage) {
         this.editIdx = -1;
         this.editProduct = {
-          id : 1000,
+          id : 0,
           name : '',
           printName: '',
           unit : '',
@@ -116,10 +102,25 @@ document.addEventListener('alpine:init', () => {
     // Category
     clearCategory(this: ProductPage) {
         this.editCategory.splice(0);
+        this.editProduct.category = '';
     },
     
     setCategory(this: ProductPage, category : string, depth: number) {
         this.editCategory.splice(depth, this.editCategory.length - depth, category);
+        this.editProduct.category = this.editCategory.join(':');
+    },
+
+    newCategory(this: ProductPage) { 
+      let name = window.prompt("Category Name : ").trim().toUpperCase();
+      let node = getProductSearchService().getCategories();
+      for (let k of this.editCategory) {
+        node = node.children.get(k);
+      }
+      node.children.set(name, {
+        name: name,
+        children: new Map(),
+        items: []
+      });
     },
 
     getCategories(this: ProductPage, depth : number) : string[] {
@@ -135,11 +136,11 @@ document.addEventListener('alpine:init', () => {
         return this.editCategory.length;
     },
 
-      delete(this: ProductPage, idx: number) {
-        this.products.splice(idx, 1);
-        this.showModal = false;
-        this.saveItems();
-      },
+    delete(this: ProductPage, idx: number) {
+      this.products.splice(idx, 1);
+      this.showModal = false;
+      this.saveItems();
+    },
       
       export() {
         const json = localStorage.getItem(localStorageProductKey);
