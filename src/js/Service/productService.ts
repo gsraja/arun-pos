@@ -59,7 +59,5 @@ document.addEventListener('alpine:init', () => {
         clone(product : Product) : Product {
             return this.fromJson(this.toJson(product));
         },
-
-
     });
 });

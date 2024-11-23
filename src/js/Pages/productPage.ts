@@ -56,6 +56,7 @@ document.addEventListener('alpine:init', () => {
       showModal: false,
       editIdx : -1,
       editProduct: <Product>{},
+      editAmount : null,
 
       newProduct(this: ProductPage) {
         this.editIdx = -1;
@@ -76,7 +77,7 @@ document.addEventListener('alpine:init', () => {
         if (isNew) {
           this.products.push(this.editProduct);
         } else {
-          this.products[this.editIdx] = this.editProduct;
+          this.products.splice(this.editIdx, 1, this.editProduct);
         }
         this.showModal = false;
         this.saveItems();
@@ -99,6 +100,7 @@ document.addEventListener('alpine:init', () => {
           price : new Amount(0),
           category : '',
         }
+        this.editAmount = new AmountText(this.editProduct);
         this.showModal = true;
       },
 
