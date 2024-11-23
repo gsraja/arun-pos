@@ -5,12 +5,10 @@ interface ProductPage {
   saveItems(): void,
   export(): void,
   
-
   editIdx : number,
   editProduct: Product,
   editAmount: AmountText,
   editCategory: Array<string>,
-
 
   // Category Editing !!
   clearCategory(this: ProductPage) : void,
@@ -24,9 +22,8 @@ interface ProductPage {
   showModal: boolean,
 
   edit(idx: number) : void,
-  delete(idx: number): void,
+  remove(this: ProductPage): void,
   save():  void,
-  cancel(): void,
   add() : void,
 }
 
@@ -82,6 +79,7 @@ document.addEventListener('alpine:init', () => {
         this.editIdx = idx;
         this.editProduct = getProductService().clone(this.products[idx]);
         this.editAmount = new AmountText(this.editProduct);
+        this.editCategory = this.editProduct.category == '' ? []  : this.editProduct.category.split(':');
         this.showModal = true;
       },
 
@@ -96,6 +94,7 @@ document.addEventListener('alpine:init', () => {
           category : '',
         }
         this.editAmount = new AmountText(this.editProduct);
+        this.editCategory = [];
         this.showModal = true;
       },
 
@@ -120,7 +119,9 @@ document.addEventListener('alpine:init', () => {
         name: name,
         children: new Map(),
         items: []
-      });
+      }); 
+      this.editCategory.push(name);
+      this.editProduct.category = this.editCategory.join(':');
     },
 
     getCategories(this: ProductPage, depth : number) : string[] {
@@ -136,10 +137,13 @@ document.addEventListener('alpine:init', () => {
         return this.editCategory.length;
     },
 
-    delete(this: ProductPage, idx: number) {
-      this.products.splice(idx, 1);
-      this.showModal = false;
-      this.saveItems();
+    remove(this: ProductPage) {
+      let confirm  = window.confirm("Are you sure do you want to delete this product?");
+      if (confirm) {
+        this.products.splice(this.editIdx, 1);
+        this.showModal = false;
+        this.saveItems();
+      }
     },
       
       export() {
@@ -156,6 +160,7 @@ document.addEventListener('alpine:init', () => {
 
       saveItems() {
         getProductService().setProducts(this.products);
+        
       },
       loadItems(e: any) {
         var file = e.target.files[0];

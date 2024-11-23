@@ -35,8 +35,9 @@ document.addEventListener('alpine:init', () => {
         },
 
         setProducts(this: ProductService, products : Product[]) : void {
-            this.setIsDirty();
             localStorage.setItem(localStorageProductKey, JSON.stringify(products));
+            this.setIsDirty();
+            getProductSearchService().setDirty();
         },
 
         setIsDirty(this: ProductService) {

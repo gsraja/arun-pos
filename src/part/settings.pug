@@ -25,7 +25,7 @@ div(x-data="productPage()")
       .form-group
         label(for='finputPrice') Price
         input#finputPrice.form-control(type='text' x-model="editAmount" placeholder='0')
-      .form-group(x-data={btnId: 'btnId'})
+      .form-group(x-data={btnId: 'settingBtn'})
         label Category
         div: .btn-group(role="group")
           div(x-id="[btnId]")
@@ -50,6 +50,8 @@ div(x-data="productPage()")
     .modal-footer 
       button.btn.btn-secondary(type="button" @click="showModal = false") Close
       button.btn.btn-primary(type="submit" form="myform") Save changes
+      div(x-show="editIdx !== -1")
+        button.btn.btn-danger(type="button" @click="remove") Delete
   table.table.table-striped
     thead
       th +/-
