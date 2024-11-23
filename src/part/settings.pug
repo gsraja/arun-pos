@@ -25,8 +25,22 @@ div(x-data="productPage()")
       .form-group
         label(for='finputPrice') Price
         input#finputPrice.form-control(type='text' x-model="editAmount" placeholder='0')
-      .form-group
-        label(for='finputCategory') Category
+      .form-group(x-data={btnId: 'btnId'})
+        label Category
+        div: .btn-group(role="group")
+          div(x-id="[btnId]")
+            input.btn-check(:id="$id(btnId)" type="radio" @click="clearCategory()" :name="btnId" autocomplete="off" checked)
+            label.btn.btn-outline-warning(:for="$id(btnId)") All
+          for cat in getCategories(0)
+            div(x-id="[btnId]")
+              input.btn-check(type="radio" @click="setCategory(cat, 0)" :name="btnId" :id="$id(btnId)" autocomplete="off")
+              label.btn.btn-outline-primary(:for="$id(btnId)")= cat
+        for n in getDepth()
+          div: .btn-group(role="group")
+            for cat in getCategories(n)
+              div(x-id="[btnId]")
+                input.btn-check(type="radio" @click="setCategory(cat, n)" :name="btnId" :id="$id(btnId)" autocomplete="off")
+                label.btn.btn-outline-primary(:for="$id(btnId)")= cat
     .modal-footer 
       button.btn.btn-secondary(type="button" @click="showModal = false") Close
       button.btn.btn-primary(type="submit" form="myform") Save changes

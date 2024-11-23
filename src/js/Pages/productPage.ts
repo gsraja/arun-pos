@@ -9,6 +9,14 @@ interface ProductPage {
   editIdx : number,
   editProduct: Product,
   editAmount: AmountText,
+  editCategory: Array<string>,
+
+
+  // Category Editing !!
+  clearCategory(this: ProductPage) : void,
+  setCategory(this: ProductPage, category : string, depth: number) : void,
+  getCategories(this: ProductPage, depth : number) : string[],
+  getDepth(this: ProductPage) :  number,
 
 
   // Editing !!
@@ -57,6 +65,7 @@ document.addEventListener('alpine:init', () => {
       editIdx : -1,
       editProduct: <Product>{},
       editAmount : null,
+      editCategory : [],
 
       newProduct(this: ProductPage) {
         this.editIdx = -1;
@@ -103,6 +112,28 @@ document.addEventListener('alpine:init', () => {
         this.editAmount = new AmountText(this.editProduct);
         this.showModal = true;
       },
+
+    // Category
+    clearCategory(this: ProductPage) {
+        this.editCategory.splice(0);
+    },
+    
+    setCategory(this: ProductPage, category : string, depth: number) {
+        this.editCategory.splice(depth, this.editCategory.length - depth, category);
+    },
+
+    getCategories(this: ProductPage, depth : number) : string[] {
+        let node = getProductSearchService().getCategories();
+        if (depth > this.editCategory.length) return [];
+        for (let i = 0; i < depth; i++) {
+            node = node.children.get(this.editCategory[i]);
+        }
+        return Array.from(node.children.keys()).sort();
+    },
+    
+    getDepth(this: ProductPage) :  number {
+        return this.editCategory.length;
+    },
 
       delete(this: ProductPage, idx: number) {
         this.products.splice(idx, 1);
