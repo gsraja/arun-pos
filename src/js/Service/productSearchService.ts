@@ -2,6 +2,7 @@ const productSearchServiceKey = "productSearchService";
 
 interface Category {
     name : string,
+    value: string,
     children : Map<string, Category>,
     items : Array<Product>,
 }
@@ -34,8 +35,10 @@ document.addEventListener('alpine:init', () => {
             })
       
         categoryMap.forEach((value, key) => {
+            let catValue = category.value === '' ? key : `${category.value}:${key}`;
             let childCategory : Category = {
                 name: key,
+                value: catValue,
                 children: new Map(),
                 items: value,
             }
@@ -52,6 +55,7 @@ document.addEventListener('alpine:init', () => {
             if (this.isDirty()) {
                 this.rootCategory = {
                     name : 'All',
+                    value: '',
                     children: new Map(),
                     items: getProductService().getProducts(),
                 }

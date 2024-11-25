@@ -8,12 +8,9 @@ interface ProductPage {
   editIdx : number,
   editProduct: Product,
   editAmount: AmountText,
-  editCategory: Array<string>,
 
   // Category Editing !!
-  clearCategory(this: ProductPage) : void,
-  setCategory(this: ProductPage, category : string, depth: number) : void,
-  getCategories(this: ProductPage, depth : number) : string[],
+  getCategories(this: ProductPage, depth : number) : Category[],
   getDepth(this: ProductPage) :  number,
   newCategory(this: ProductPage) : void,
 
@@ -40,7 +37,7 @@ class AmountText implements GetSet<string> {
   }
 
   get(): string {
-      return "" + this._p.price.Rupee;
+      return `${this._p.price.Rupee}`;
   }
 
   set(val: string): void {
@@ -56,13 +53,22 @@ class AmountText implements GetSet<string> {
 
 
 document.addEventListener('alpine:init', () => {
+  function createProduct() : Product {
+    return {
+      id : 0,
+      name : '',
+      printName: '',
+      unit : '',
+      price : new Amount(0),
+      category : '',
+    };
+  }
   Alpine.data(productPageKey, () => (<ProductPage>{
       products: getProductService().getProducts(),
       showModal: false,
       editIdx : -1,
-      editProduct: <Product>{},
+      editProduct: createProduct(),
       editAmount : null,
-      editCategory : [],
 
       save(this: ProductPage) {
         let isNew = this.editIdx == -1;
@@ -79,62 +85,47 @@ document.addEventListener('alpine:init', () => {
         this.editIdx = idx;
         this.editProduct = getProductService().clone(this.products[idx]);
         this.editAmount = new AmountText(this.editProduct);
-        this.editCategory = this.editProduct.category == '' ? []  : this.editProduct.category.split(':');
         this.showModal = true;
       },
 
       add(this: ProductPage) {
         this.editIdx = -1;
-        this.editProduct = {
-          id : 0,
-          name : '',
-          printName: '',
-          unit : '',
-          price : new Amount(0),
-          category : '',
-        }
+        this.editProduct = createProduct()
         this.editAmount = new AmountText(this.editProduct);
-        this.editCategory = [];
         this.showModal = true;
       },
 
-    // Category
-    clearCategory(this: ProductPage) {
-        this.editCategory.splice(0);
-        this.editProduct.category = '';
-    },
-    
-    setCategory(this: ProductPage, category : string, depth: number) {
-        this.editCategory.splice(depth, this.editCategory.length - depth, category);
-        this.editProduct.category = this.editCategory.join(':');
-    },
-
     newCategory(this: ProductPage) { 
-      let name = window.prompt("Category Name : ").trim().toUpperCase();
+      const name = window.prompt("Category Name : ").trim().toUpperCase();
       let node = getProductSearchService().getCategories();
-      for (let k of this.editCategory) {
+      const editCategory = this.editProduct.category == '' ? [] : this.editProduct.category.split(':');
+      for (let k of editCategory) {
         node = node.children.get(k);
       }
+      editCategory.push(name);
+      const newCat = editCategory.join(':');
       node.children.set(name, {
         name: name,
+        value: newCat,
         children: new Map(),
-        items: []
+        items: [],
       }); 
-      this.editCategory.push(name);
-      this.editProduct.category = this.editCategory.join(':');
+      this.editProduct.category = newCat;
     },
 
-    getCategories(this: ProductPage, depth : number) : string[] {
+    getCategories(this: ProductPage, depth : number) : Category[] {
         let node = getProductSearchService().getCategories();
-        if (depth > this.editCategory.length) return [];
+        const editCategory = this.editProduct.category == '' ? [] : this.editProduct.category.split(':');
+        if (depth > editCategory.length) return [];
         for (let i = 0; i < depth; i++) {
-            node = node.children.get(this.editCategory[i]);
+            node = node.children.get(editCategory[i]);
         }
-        return Array.from(node.children.keys()).sort();
+        return Array.from(node.children.values()).sort((a, b) => a.name.localeCompare(b.name));
     },
     
     getDepth(this: ProductPage) :  number {
-        return this.editCategory.length;
+      if (this.editProduct.category == '') return 0;
+      return this.editProduct.category.split(':').length;
     },
 
     remove(this: ProductPage) {
@@ -164,9 +155,7 @@ document.addEventListener('alpine:init', () => {
       },
       loadItems(e: any) {
         var file = e.target.files[0];
-        if (!file) {
-          return;
-        }
+        if (!file) {return;}
         var reader = new FileReader();
         reader.onload = function(e) {
           var contents = <string>e.target.result;

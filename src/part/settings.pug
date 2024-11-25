@@ -29,12 +29,12 @@ div(x-data="productPage()")
         label Category
         div: .btn-group(role="group")
           div(x-id="[btnId]")
-            input.btn-check(:id="$id(btnId)" type="radio" @click="clearCategory()" :name="btnId" autocomplete="off" checked)
+            input.btn-check(:id="$id(btnId)" value="" x-model="editProduct.category" type="radio" :name="btnId" autocomplete="off")
             label.btn.btn-outline-warning(:for="$id(btnId)") All
           for cat in getCategories(0)
             div(x-id="[btnId]")
-              input.btn-check(type="radio" @click="setCategory(cat, 0)" :name="btnId" :id="$id(btnId)" autocomplete="off")
-              label.btn.btn-outline-primary(:for="$id(btnId)")= cat
+              input.btn-check(type="radio" :value="()=>{return cat.value}" x-model="editProduct.category" :name="btnId" :id="$id(btnId)" autocomplete="off")
+              label.btn.btn-outline-primary(:for="$id(btnId)")= cat.name
           div(x-id="[btnId]" x-show="getDepth() === 0")
             input.btn-check(type="radio" @click="newCategory" :name="btnId" :id="$id(btnId)" autocomplete="off")
             label.btn.btn-outline-info(:for="$id(btnId)") +
@@ -42,8 +42,8 @@ div(x-data="productPage()")
           div: .btn-group(role="group")
             for cat in getCategories(n)
               div(x-id="[btnId]")
-                input.btn-check(type="radio" @click="setCategory(cat, n)" :name="btnId" :id="$id(btnId)" autocomplete="off")
-                label.btn.btn-outline-primary(:for="$id(btnId)")= cat
+                input.btn-check(type="radio" :value="()=>{return cat.value}" x-model="editProduct.category" :name="btnId" :id="$id(btnId)" autocomplete="off")
+                label.btn.btn-outline-primary(:for="$id(btnId)")= cat.name
             div(x-id="[btnId]" x-show="getDepth() === n")
               input.btn-check(type="radio" @click="newCategory" :name="btnId" :id="$id(btnId)" autocomplete="off")
               label.btn.btn-outline-info(:for="$id(btnId)") +
